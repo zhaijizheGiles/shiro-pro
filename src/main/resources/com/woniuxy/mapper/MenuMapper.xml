@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.woniuxy.dao.MenuDao">
+    <resultMap id="menuMap" type="Menu">
+        <id property="id" column="id"></id>
+        <result property="icon" column="icon"></result>
+        <result property="name" column="name"></result>
+        <result property="state" column="state"></result>
+        <result property="url" column="url"></result>
+        <result property="pId" column="p_id"></result>
+    </resultMap>
+    <select id="getMenusByRoleId" parameterType="int" resultMap="menuMap">
+        SELECT tm.* FROM t_menu tm INNER JOIN t_role_menu trm ON tm.id=trm.menu_id WHERE trm.role_id=#{roleId}
+    </select>
+    <select id="getAllMenus" resultMap="menuMap">
+        SELECT * FROM t_menu
+    </select>
+    
+    <resultMap id="menuPerms" type="MenuPermission">
+        <id property="id" column="id"></id>
+        <result property="url" column="url"></result>
+        <collection property="roleIds" column="role_id" ofType="Integer">
+            <constructor>
+                <arg column="role_id"></arg>
+            </constructor>
+        </collection>
+    </resultMap>
+    <select id="getMenuPerms" resultMap="menuPerms">
+        SELECT M.id,M.url,R.role_id
+        FROM t_menu M LEFT JOIN t_role_menu R ON R.menu_id=M.id
+    </select>
+</mapper>

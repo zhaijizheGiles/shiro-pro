@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.woniuxy.dao.RoleDao">
+    <resultMap id="roleMap" type="Role">
+        <id property="id" column="id"></id>
+        <result property="name" column="name"></result>
+        <result property="remarks" column="remarks"></result>
+        <result property="bz" column="bz"></result>
+    </resultMap>
+    <select id="getRoleList" resultMap="roleMap">
+       SELECT * FROM t_role
+    </select>
+    <insert id="addRole" parameterType="Role" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO t_role(name,biz,remarks)VALUES(#{name},#{biz},#{remarks})
+    </insert>
+    <update id="updateRole" parameterType="Role">
+        UPDATE t_role SET name=#{name},remarks=#{remarks},biz=#{biz} WHERE id=#{id}
+    </update>
+    <!--根据用户id查询所有角色-->
+    <select id="getRolesByUserId" parameterType="int" resultMap="roleMap">
+        SELECT tr.* FROM t_role tr INNER JOIN t_user_role tur ON tr.id=tur.role_id WHERE tur.user_id=#{userId}
+    </select>
+    <insert id="addRoleMenu" parameterType="map">
+        INSERT INTO t_role_menu(menu_id,role_id)VALUES(#{menuId},#{roleId})
+    </insert>
+    <delete id="deleteRoleMenu" parameterType="int">
+        DELETE FROM t_role_menu WHERE role_id=#{roleId}
+    </delete>
+</mapper>
